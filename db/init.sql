@@ -1,0 +1,26 @@
+CREATE TABLE users(
+    id SERIAL PRIMARY KEY,
+    Username VARCHAR(100) NOT NULL,
+    Password VARCHAR(100) NOT NULL,
+    Email VARCHAR(200) NOT NULL,
+    Phone VARCHAR (20) NOT NULL,
+
+    pfp TEXT NOT NULL,
+    Bio VARCHAR (500),
+    Website VARCHAR(1000),
+
+    showEmail BOOLEAN NOT NULL,
+    showPhone BOOLEAN NOT NULL
+);
+
+CREATE TABLE items(
+    id SERIAL PRIMARY KEY,
+    Img TEXT NOT NULL,
+    Title VARCHAR(100) NOT NULL,
+    Description VARCHAR(500),
+    Hashtags VARCHAR(1000),
+    Sale BOOLEAN NOT NULL,
+    Trade BOOLEAN NOT NULL,
+    Display BOOLEAN NOT NULL,
+    User_id INT REFERENCES users(id) ON DELETE CASCADE
+);
