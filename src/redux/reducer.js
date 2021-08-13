@@ -24,6 +24,7 @@ export function logoutUser() {
 
 export function getUser() {
     const user = axios.get('/api/user').then(res => res.data).catch(err => console.log('err on getuser function, redux', err))
+    console.log('this is user', user)
     return {
         type: GET_USER,
         payload: user

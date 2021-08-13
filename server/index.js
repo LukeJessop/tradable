@@ -27,10 +27,13 @@ massive({
     console.log('Database up!')
 }).catch(err => console.log('this is the error ' + err))
 
-// AUTHORIZATION ENDPOINTS
-app.post('/auth/register', ctrl.register)
-app.post('/auth/loginusername', ctrl.loginUsername)
-app.post('/auth/loginemail', ctrl.loginEmail)
+// USER ENDPOINTS
+app.post('/auth/register', ctrl.register) // registers new user
+app.post('/auth/username', ctrl.loginUsername) //login with username
+app.post('/auth/email', ctrl.loginEmail) //login with email
+app.get('/api/user', ctrl.getUser) //gets user info for redux
 //
+
+
 
 app.listen(SERVER_PORT, console.log(`You are on Port: ${SERVER_PORT} `))

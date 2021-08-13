@@ -1,6 +1,6 @@
 import {Component} from 'react';
-import {Link} from 'react-router-dom'
 import axios from 'axios'
+import {loginUser} from '../redux/reducer'
 
 class Auth extends Component {
     constructor(){
@@ -19,11 +19,12 @@ class Auth extends Component {
         }
         this.register = this.register.bind(this)
         this.emailOrUsername = this.emailOrUsername.bind(this)
+        this.login = this.login.bind(this)
     }
 
     register(){
-        const {Username, Email, Phone, Password} = this.state
-        if(Username === '' || Email === '' || Phone === '' || Password === ''){
+        const {Username, Email, Phone, Password, Confirm} = this.state
+        if(Username === '' || Email === '' || Phone === '' || Password === ''|| Confirm === ''){
             this.setState({MissingInput: true})
         }else{
             axios.post('/auth/register', {Username, Email, Phone, Password})
@@ -33,34 +34,37 @@ class Auth extends Component {
         }
     }
 
-    login(){ //TODO: figure out how you can identify weather email or username is being used in the back end :)
+    login(){
         if(this.state.loginEmail === ''){
-
-            axios.post('auth/loginusername', (this.state.loginUsername, this.state.loginPassword))
+            let usernameData = {loginUsername: this.state.loginUsername, loginPassword: this.state.loginPassword}
+            axios.post('auth/username', usernameData)
             .then(res => {
+                loginUser(res.data)
                 this.props.history.push('/yourprofile')
             })
-        }else if(this.state.loginUsername != ''){
-            axios.post('auth/loginemail', (this.state.loginEmail, this.state.loginPassword))
+        }else if(this.state.loginUsername === ''){
+            let emailData = {loginEmail: this.state.loginEmail, loginPassword: this.state.loginPassword}
+            axios.post('auth/email', emailData)
             .then(res => {
+                loginUser(res.data)
                 this.props.history.push('/yourprofile')
             })
         }
     }
 
 
-    emailOrUsername(input) { //sorts out weather the user is using their username to sign in or their email to sign in.
+    emailOrUsername(input) { //determines weather the user is logging in with their username or their email.
         if(input.includes('@' && '.com')){
             this.setState({
-                loginEmail: input
+                loginEmail: input,
+                loginUsername: ''
             })
-        }else{
+        }else if(!input.includes('@' && '.com')){
             this.setState({
+                loginEmail: '',
                 loginUsername: input
             })
         }
-        console.log(this.state.loginEmail, 'email')
-        console.log(this.state.loginUsername, 'user')
     }
 
     render(){
@@ -69,6 +73,7 @@ class Auth extends Component {
                 <div className='authbox'>
                     <div className='register'>
                         <div className='register2'>
+                        <div style={{color: 'red', fontSize: '12px'}}>{this.state.MissingInput ? 'Please fill out all feilds with *': ''}</div>
                                 <div className='required'>
                                     <input placeholder='* Username' onChange={(e)=>{this.setState({Username: e.target.value})}}/>
                                 </div>
@@ -99,13 +104,13 @@ class Auth extends Component {
                             <br/>
                             <input type='password' placeholder='Password' onChange={e => this.setState({loginPassword: e.target.value})}/>
                             <br/>
-                            <button onClick={this.login()}>Login</button>
+                            <button onClick={this.login}>Login</button>
                         </div>
                     </div>
                     
                 </div>
             </div>
-        )
+            )
     }
 }
 export default Auth

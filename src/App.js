@@ -3,7 +3,7 @@ import routes from './routes'
 import Nav from './Components/Nav';
 import './Components/CSS/nav.css'
 import './Components/CSS/auth.css'
-
+import 'F:/codingfiles/tradable/src/Components/CSS/profile.css'
 
 
 function App() {
